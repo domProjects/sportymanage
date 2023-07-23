@@ -38,10 +38,11 @@ abstract class BaseController extends Controller
     protected $helpers = [];
 
     /**
-     * Be sure to declare properties for any property fetch you initialized.
-     * The creation of dynamic property is deprecated in PHP 8.2.
+     * The data to be passed to the view.
+     *
+     * @var array
      */
-    // protected $session;
+    protected $data = [];
 
     /**
      * Constructor.
@@ -51,8 +52,33 @@ abstract class BaseController extends Controller
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
 
-        // Preload any models, libraries, etc, here.
+        // Retrieval of variables for the language
+        $this->data['locale'] = $request->getLocale();
+        $this->data['supportedLocales'] = $request->config->supportedLocales;
 
-        // E.g.: $this->session = \Config\Services::session();
+        // Retrieval of the charset variable
+        $this->data['charset'] = $request->config->charset;
+    }
+
+    /**
+     * Rendering of administration pages
+     *
+     * @param string $view The view file to render
+     */
+    protected function viewAdmin(string $view)
+    {
+        // Assemble the browser page
+        echo view('admin/' . $view, $this->data);
+    }
+
+    /**
+     * Rendering of public pages
+     *
+     * @param string $view The view file to render
+     */
+    protected function viewPublic(string $view)
+    {
+        // Assemble the browser page
+        echo view('public/' . $view, $this->data);
     }
 }
